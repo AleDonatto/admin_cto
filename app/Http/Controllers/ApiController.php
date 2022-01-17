@@ -37,7 +37,7 @@ class ApiController extends Controller
         ->get();
 
         return response()->json([
-            'productosNuevos' => $productosNuevos,
+            'productosNuevos' => $productosNuevos
         ]);
     }
 
@@ -63,10 +63,16 @@ class ApiController extends Controller
         ->where('categorias.idCategoria', $categoria)
         ->where('productos.mostrar', 1)
         ->select('productos.*', 'categorias.nameCategoria')
-        ->paginate(10);
+        ->get();
+
+        $categoria = DB::table('categorias')
+        ->select('categorias.nameCategoria')
+        ->where('categorias.idCategoria', $categoria)
+        ->first();
 
         return response()->json([
-            'productos' => $productosCategoria
+            'productos' => $productosCategoria,
+            'categoria' => $categoria,
         ]);
 
     }
@@ -77,6 +83,10 @@ class ApiController extends Controller
         ->join('categorias', 'productos.categoria_id', '=', 'categorias.idCategoria')
         ->where('productos.idProducto', $producto)
         ->select('productos.*', 'categorias.nameCategoria')
-        ->get();
+        ->first();
+
+        return response()->json([
+            'producto' => $dataProducto
+        ]);
     }
 }

@@ -27,7 +27,7 @@ Route::get("getProductosNuevos", [ApiController::class, 'getProductosNuevos']);
 
 Route::get('getProductosDescuento', [ApiController::class, 'getProductosDescuento']);
 
-Route::get('getPoductosxCategoria/{categoria}', [ApiController::class, 'getProductosCategoria']);
+Route::get('getProductosxCategoria/{categoria}', [ApiController::class, 'getProductosCategoria']);
 
 Route::get('getProducto/{producto}', [ApiController::class, 'getProducto']);
 
