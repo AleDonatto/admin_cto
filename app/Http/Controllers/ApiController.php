@@ -85,8 +85,19 @@ class ApiController extends Controller
         ->select('productos.*', 'categorias.nameCategoria')
         ->first();
 
+        $moreProductos = DB::table('productos')
+        ->join('categorias', 'productos.categoria_id', '=', 'categorias.idCategoria')
+        ->where('productos.idProducto', '<>', $producto)
+        ->where('categorias.idCategoria', $dataProducto->categoria_id)
+        ->where('productos.mostrar', 1)
+        ->select('productos.*', 'categorias.nameCategoria')
+        ->latest()
+        ->limit(4)
+        ->get();
+
         return response()->json([
-            'producto' => $dataProducto
+            'producto' => $dataProducto,
+            'moreProductos' => $moreProductos,
         ]);
     }
 }
