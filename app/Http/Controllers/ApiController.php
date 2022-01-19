@@ -100,4 +100,15 @@ class ApiController extends Controller
             'moreProductos' => $moreProductos,
         ]);
     }
+
+    public function getAllProductos(){
+        $allProductos = DB::table('productos')
+        ->select('productos.*')
+        //->paginate(10)
+        ->get();
+
+        return request()->json([
+            'productos' => $allProductos
+        ]);
+    }
 }
