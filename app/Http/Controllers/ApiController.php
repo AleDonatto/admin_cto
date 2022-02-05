@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Models\Categorias;
+use App\Models\CompraCliente;
 
 class ApiController extends Controller
 {
@@ -107,8 +108,28 @@ class ApiController extends Controller
         //->paginate(10)
         ->get();
 
-        return request()->json([
+        return response()->json([
             'productos' => $allProductos
+        ]);
+    }
+
+    public function storeShopClient(Request  $request){
+        return $request;
+        
+        $validation = $request->validate([
+            'nombre' => 'required|string',
+            'telefono' => 'required|numeric',
+            'productos' => 'required'
+        ]);
+
+        $listaCompra = new CompraCliente;
+        $listaCompra->NombreCliente = $request->nombre;
+        $listaCompra->Telefono = $request->telefono;
+        $listaCompra->productos =$request->productos;
+        $listaCompra->save();
+
+        return response()->json([
+            'mensaje' => 'Su lista de compra a sido enviada en breve se pondran en contacto al numero que proporciono'
         ]);
     }
 }

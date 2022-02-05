@@ -32,3 +32,5 @@ Route::get('getProductosxCategoria/{categoria}', [ApiController::class, 'getProd
 Route::get('getProducto/{producto}', [ApiController::class, 'getProducto']);
 
 Route::get('getAllProductos', [ApiController::class, 'getAllProductos']);
+
+Route::post('shopClient', [ApiController::class, 'storeShopClient']);

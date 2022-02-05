@@ -73,7 +73,7 @@ class AdminController extends Controller
         return Inertia::render('Admin/Productos', [
             'list_Prod' => $list_Prod,
             'list_Cat' => $list_Cat,
-        ]);
+        ])->header('Cache-Control', 'no-store, no-cache, private, must-revalidate');
     }
 
     public function StoreProductos(Request $request){
