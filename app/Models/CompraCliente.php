@@ -15,7 +15,6 @@ class CompraCliente extends Model
     protected $fillable = [
         'NombreCliente',
         'Telefono',
-        'descripcion',
         'productos',
     ];
 }

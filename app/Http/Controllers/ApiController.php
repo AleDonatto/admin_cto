@@ -113,8 +113,7 @@ class ApiController extends Controller
         ]);
     }
 
-    public function storeShopClient(Request  $request){
-        return $request;
+    public function storeShopClient(Request $request){
         
         $validation = $request->validate([
             'nombre' => 'required|string',
@@ -125,7 +124,7 @@ class ApiController extends Controller
         $listaCompra = new CompraCliente;
         $listaCompra->NombreCliente = $request->nombre;
         $listaCompra->Telefono = $request->telefono;
-        $listaCompra->productos =$request->productos;
+        $listaCompra->productos = json_encode($request->productos);
         $listaCompra->save();
 
         return response()->json([
