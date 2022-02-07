@@ -125,6 +125,7 @@ class ApiController extends Controller
         $listaCompra->NombreCliente = $request->nombre;
         $listaCompra->Telefono = $request->telefono;
         $listaCompra->productos = json_encode($request->productos);
+        $listaCompra->estatus = 1;
         $listaCompra->save();
 
         return response()->json([

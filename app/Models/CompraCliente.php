@@ -9,12 +9,13 @@ class CompraCliente extends Model
 {
     use HasFactory;
 
-    protected $table = 'compraCliente';
+    protected $table = 'compracliente';
     protected $primaryKey = 'idCompra';
 
     protected $fillable = [
         'NombreCliente',
         'Telefono',
         'productos',
+        'estatus'
     ];
 }
