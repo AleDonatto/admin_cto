@@ -260,10 +260,7 @@ class AdminController extends Controller
 
     public function viewPedidos(){
 
-        $listaPedidos = DB::table('compracliente')
-        ->select('idCompra','NombreCliente', 'Telefono', 'estatus', 'created_at')
-        ->orderBy('compracliente.estatus')
-        ->get();
+        $listaPedidos = $this->getComprasClientes();
 
         return Inertia::render('Admin/Pedidos', [
             'listapedidos' => $listaPedidos
@@ -282,5 +279,35 @@ class AdminController extends Controller
         return response()->json([
             'lista_productos' => $unzip,
         ]);
+    }
+
+    public function updateEstatusCompra($id, Request $request){
+
+        $validation = $request->validate([
+            'estatus' => 'required|integer'
+        ]);
+
+        $affected = DB::table('compracliente')
+        ->where('idCompra', $id)
+        ->update([
+            'estatus' => $request->estatus,
+        ]);
+
+        $updateListaPedidos = $this->getComprasClientes();
+
+        return response()->json([
+            'message' => 'Compra actualizada',
+            'updateListaPedidos' => $updateListaPedidos,
+        ]);
+    }
+
+    private function getComprasClientes(){
+
+        $listaPedidos = DB::table('compracliente')
+        ->select('idCompra','NombreCliente', 'Telefono', 'estatus', 'created_at')
+        ->orderBy('compracliente.estatus')
+        ->get();
+
+        return $listaPedidos;
     }
 }

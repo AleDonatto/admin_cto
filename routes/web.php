@@ -61,3 +61,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/getCompraCliente/{idCompr
     AdminController::class, 'getListaPedidoCliente'
 ]);
 
+Route::middleware(['auth:sanctum', 'verified'])->put('/updateEstatusCompra/{id}', [
+    AdminController::class, 'updateEstatusCompra'
+]);
+

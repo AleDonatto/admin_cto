@@ -40,7 +40,7 @@
                                             <tbody>
                                                 <tr v-for="(list, id) in listaCliente.lista" :key="id">
                                                     <td class="pb-4 md:table-cell">
-                                                        <img :src="/storage/ + 'images/KO0FiIQKlZt329wh72jB7E0sIKTAiGuBFXri0Cdw.jpg'" :alt="list.nombre">
+                                                        <img :src="/storage/ + list.image" :alt="list.nombre">
                                                     </td>
                                                     <td class="mb-2 md:ml-2 text-ellipsis overflow-hidden">
                                                         <p class='mb-2 md:ml-2 text-ellipsis overflow-hidden'>{{ list.nombre }}</p>
@@ -75,7 +75,8 @@
                                 <option :value="3">Entregado</option>
                                 <option :value="4">Cancelar Compra</option>
                             </select>
-                            <button class='ml-auto flex items-center gap-1 sm:text-lg border border-gray-300 px-3 py-1 rounded-full hover:bg-gray-50 transition-colors focus:bg-gray-100 focus:outline-none focus-visible:border-gray-500'>
+                            <button class='ml-auto flex items-center gap-1 sm:text-lg border border-gray-300 px-3 py-1 rounded-full hover:bg-gray-50 transition-colors focus:bg-gray-100 focus:outline-none focus-visible:border-gray-500'
+                            @click="changeStatusCompra(listaCliente.idCompra)">
                                 <span>Guardar Cambios</span>
                             </button>
                             <button class="flex items-center gap-1 sm:text-lg border border-gray-300 px-3 py-1 rounded-full hover:bg-gray-50 transition-colors focus:bg-gray-100 focus:outline-none focus-visible:border-gray-500"
@@ -96,7 +97,7 @@
 
                     <div class="w-full bg-white p-5 rounded-lg lg:rounded-l-none">
                         <div class="overflow-x-auto">
-                            <table class="overflow-x-auto table-auto w-full">
+                            <table class="overflow-x-auto table-auto w-full" id="pedidos" style="width:100%">
                                 <thead class="mt-2 text-xs font-semibold uppercase text-gray-400 bg-gray-50">
                                     <tr>
                                         <th class="p-2 whitespace-nowrap">
@@ -131,7 +132,20 @@
                                             <div class="text-center">{{ item.Telefono }}</div>
                                         </td>
                                         <td class="p-2 whitespace-nowrap">
-                                            <div class="text-center">{{ item.estatus }}</div>
+                                            <div class="text-center">
+                                                <p v-if="item.estatus == 1" class="inline-block rounded-full text-white bg-indigo-500 px-2 py-1 text-xs font-bold mr-3">
+                                                    Ordenado por el Cliente
+                                                </p>
+                                                <p v-else-if="item.estatus == 2" class="inline-block rounded-full text-white bg-blue-400 px-2 py-1 text-xs font-bold mr-3">
+                                                    Confirmado de recibido
+                                                </p>
+                                                <p v-else-if="item.estatus == 3" class="inline-block rounded-full text-white bg-green-400 px-2 py-1 text-xs font-bold mr-3">
+                                                    Entregado al Cliente
+                                                </p>
+                                                <p v-else-if="item.estatus == 4" class="inline-block rounded-full text-white bg-red-500 px-2 py-1 text-xs font-bold mr-3">
+                                                    Compra Cancelada
+                                                </p>
+                                            </div>
                                         </td>
                                         <td class="p-2 whitespace-nowrap">
                                             <div class="text-center">{{ item.created_at }}</div>
@@ -159,6 +173,7 @@
 import { defineComponent } from "@vue/runtime-core";
 import AppLayout from '@/Layouts/AppLayout.vue'
 import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export default defineComponent({
     props: {
@@ -169,14 +184,17 @@ export default defineComponent({
     },
     mounted() {
         this.listaCompra = this.listapedidos
+
+        this.dataTable()
     },
     data() {
         return {
             listaCompra: [],
             listaCliente: {
+                idCompra: 0,
                 nombre: '',
                 telefono: '',
-                lista: [],
+                lista: [],    
                 estatus: 0
             },
             showLista: false,
@@ -190,6 +208,7 @@ export default defineComponent({
             this.listaCliente.nombre = NombreCliente
             this.listaCliente.telefono = Telefono
             this.listaCliente.estatus = estatus
+            this.listaCliente.idCompra = idCompra
 
             axios.get(`/getCompraCliente/${idCompra}`)
             .then(res => {
@@ -205,6 +224,49 @@ export default defineComponent({
             this.listaCliente.telefono = ''
             this.listaCliente.lista = []
             this.listaCliente.estatus = 0
+            this.listaCliente.idCompra = 0
+        },
+        changeStatusCompra(idCompra){
+
+            const datos = {
+                'estatus': this.listaCliente.estatus
+            }
+
+            axios.put(`/updateEstatusCompra/${idCompra}`, datos)
+            .then( res => {
+                const {message, updateListaPedidos} = res.data
+
+                this.listaCompra = updateListaPedidos
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: message,
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+
+                this.cerrarListaCompra()
+
+            })
+            .catch( err => {
+                const msj = err.response.data
+
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'error',
+                    title: msj.message,
+                    showConfirmButton: false,
+                    timer: 1000
+                })
+            })
+        },
+        dataTable(){
+            $(document).ready(function() {
+                $('#pedidos').DataTable( {
+                    "scrollX": true
+                } );
+            } );
         }
     }
 })
