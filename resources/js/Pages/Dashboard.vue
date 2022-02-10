@@ -6,13 +6,18 @@
             </h2>
         </template>
 
-        <div class="py-12">
+        <div class="pt-12 pb-2">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                     <welcome />
                 </div>
             </div>
         </div>
+
+        <div class="mt-5">
+            <aviso-compras/>
+        </div>
+
     </app-layout>
 </template>
 
@@ -20,11 +25,13 @@
     import { defineComponent } from 'vue'
     import AppLayout from '@/Layouts/AppLayout.vue'
     import Welcome from '@/Jetstream/Welcome.vue'
+    import AvisoCompras from '@/Pages/Admin/AvisoCompras.vue'
 
     export default defineComponent({
         components: {
             AppLayout,
             Welcome,
+            AvisoCompras
         },
     })
 </script>

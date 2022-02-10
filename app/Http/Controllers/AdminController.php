@@ -310,4 +310,15 @@ class AdminController extends Controller
 
         return $listaPedidos;
     }
+
+    public function consulSolicitudesCompra(){
+        $solicitudesPedidos = DB::table('compracliente')
+        ->select('idCompra','NombreCliente', 'Telefono', 'created_at')
+        ->where('compracliente.estatus', 1)
+        ->get();
+
+        return response()->json([
+            'solicitudesPedido' => $solicitudesPedidos
+        ]);
+    }
 }
