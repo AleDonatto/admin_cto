@@ -11,6 +11,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\File;
 use App\Models\Categorias;
 use App\Models\Productos;
+use App\Models\ComparaCliente;
 
 class AdminController extends Controller
 {
@@ -73,7 +74,7 @@ class AdminController extends Controller
         return Inertia::render('Admin/Productos', [
             'list_Prod' => $list_Prod,
             'list_Cat' => $list_Cat,
-        ])->header('Cache-Control', 'no-store, no-cache, private, must-revalidate');
+        ]);
     }
 
     public function StoreProductos(Request $request){
@@ -255,5 +256,31 @@ class AdminController extends Controller
                 'status' => 'error'
             ]);
         }
+    }
+
+    public function viewPedidos(){
+
+        $listaPedidos = DB::table('compracliente')
+        ->select('idCompra','NombreCliente', 'Telefono', 'estatus', 'created_at')
+        ->orderBy('compracliente.estatus')
+        ->get();
+
+        return Inertia::render('Admin/Pedidos', [
+            'listapedidos' => $listaPedidos
+        ]);
+    }
+
+    public function getListaPedidoCliente($idCompra){
+
+        $listaCompra = DB::table('compracliente')
+        ->select('compracliente.productos')
+        ->where('compracliente.idCompra', $idCompra)
+        ->first();
+
+        $unzip = json_decode($listaCompra->productos);
+
+        return response()->json([
+            'lista_productos' => $unzip,
+        ]);
     }
 }

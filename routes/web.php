@@ -53,3 +53,11 @@ Route::middleware(['auth:sanctum', 'verified'])->delete('/deleteCategorias/{cate
 
 Route::middleware(['auth:sanctum', 'verified'])->delete('/deleteProductos/{productos}', [AdminController::class, 'deleteProducto']);
 
+Route::middleware(['auth:sanctum', 'verified'])->get('/pedidos', [
+    AdminController::class, 'viewPedidos'
+])->name('pedidos');
+
+Route::middleware(['auth:sanctum', 'verified'])->get('/getCompraCliente/{idCompra}', [
+    AdminController::class, 'getListaPedidoCliente'
+]);
+
